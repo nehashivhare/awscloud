@@ -40,3 +40,5 @@ udagram-ec2.yml
 udagram-ec2-params.json
 
 
+URL of LoadBalancer:
+http://missi-webap-ug50vspahu9v-639562459.us-west-2.elb.amazonaws.com/
