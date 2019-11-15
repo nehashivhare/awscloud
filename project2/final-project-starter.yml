@@ -1,5 +1,4 @@
 Parameters:
-# whatever you consider a changing value, put it as a parameter instead of hard-coding it into your script
   EnvironmentName:
       Description: An environment name that will be prefixed to resource names
       Type: String
@@ -30,22 +29,6 @@ Parameters:
       Default: 10.0.3.0/24
 
 Resources:
-  #instance profile contains the IAM Role name(s) that we want to 
-  #associate to our auto scaling EC2 Servers
-  
-  # ProfileWithRolesForOurApp:
-  #   Type: AWS::IAM::InstanceProfile
-  #   Properties: 
-  #     Roles:
-  #       - Udagram-EC2-Role
-  #         #!/bin/bash
-  #         apt-get update -y
-  #         apt-get install unzip awscli -y
-  #         apt-get install apache2 -y
-  #         systemctl start apache2.service
-  #         cd /var/www/html
-  #         aws s3 cp s3://udacity-demo-1/udacity.zip .
-  #         unzip -o udacity.zip
   VPC: 
     Type: AWS::EC2::VPC
     Properties:
@@ -124,7 +107,6 @@ Resources:
       Properties:
           Domain: vpc
 
-#to route traffic from outisde to inside vpn
   NatGateway1: 
       Type: AWS::EC2::NatGateway
       Properties: 
@@ -144,31 +126,26 @@ Resources:
           Tags: 
               - Key: Name 
                 Value: !Sub ${EnvironmentName} Public Routes
-#define rule
   DefaultPublicRoute: 
       Type: AWS::EC2::Route
       DependsOn: InternetGatewayAttachment
       Properties: 
           RouteTableId: !Ref PublicRouteTable
-          #wild card IP, all the IP requests should be routed to gatewayid
           DestinationCidrBlock: 0.0.0.0/0 
           GatewayId: !Ref InternetGateway
 
-#to which subnets will the above rule be applied to
   PublicSubnet1RouteTableAssociation:
       Type: AWS::EC2::SubnetRouteTableAssociation
       Properties:
           RouteTableId: !Ref PublicRouteTable
           SubnetId: !Ref PublicSubnet1
 
-#apply same public route table rule to PublicSubnet2
   PublicSubnet2RouteTableAssociation:
       Type: AWS::EC2::SubnetRouteTableAssociation
       Properties:
           RouteTableId: !Ref PublicRouteTable
           SubnetId: !Ref PublicSubnet2
   
-#create route table for private
   PrivateRouteTable1:
       Type: AWS::EC2::RouteTable
       Properties: 
@@ -177,7 +154,6 @@ Resources:
               - Key: Name 
                 Value: !Sub ${EnvironmentName} Private Routes (AZ1)
 
-#create rule for private subnet, keep traffic between private subnets within VPC
   DefaultPrivateRoute1:
       Type: AWS::EC2::Route
       Properties:
@@ -212,16 +188,11 @@ Resources:
           RouteTableId: !Ref PrivateRouteTable2
           SubnetId: !Ref PrivateSubnet2
 
-
-
-
 Outputs: 
-  #Bonus points for useful outputs!
   VPC: 
     Description: A reference to the created VPC
     Value: !Ref VPC
     Export: 
-      #sub is substitute the EnvironmentName to VPCID & also give the value
       Name: !Sub ${EnvironmentName}-VPCID
 
   VPCPublicRouteTable:
