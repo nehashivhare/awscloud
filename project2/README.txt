@@ -29,4 +29,14 @@ EC2 instances. The NAT Gateway translates the public IP to private and
 and translates the request back from private IP to the public.
 
 
+File desciption:
+
+Scripts for infrastructure: 
+final-project-starter.yml 
+final-project-params.json
+
+Scripts for servers:
+udagram-ec2.yml 
+udagram-ec2-params.json
+
 
